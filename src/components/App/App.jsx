@@ -1,11 +1,11 @@
-import React from 'react';
+import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { Filter } from 'components/Filter/Filter';
 import { ContactList } from 'components/ContactList/ContactList';
 import { Container, Section, TitleH1, TitleH2 } from './App.styled';
 
-export class App extends React.Component {
+export class App extends Component {
   state = {
     contacts: [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -15,6 +15,24 @@ export class App extends React.Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedСontacts = JSON.parse(contacts);
+
+    if (parsedСontacts) {
+      this.setState({ contacts: parsedСontacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const nextContacts = this.state.contacts;
+    const prevContacts = prevState.contacts;
+
+    if (nextContacts !== prevContacts) {
+      localStorage.setItem('contacts', JSON.stringify(nextContacts));
+    }
+  }
 
   // Добавляет контакт в список
   addContact = ({ name, number }) => {
